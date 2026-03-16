@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fynd UK Growth Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* === LOGIN SCREEN === */
+        .login-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #000000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .login-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 25px 80px rgba(139, 92, 246, 0.15);
+            text-align: center;
+        }
+
+        .login-logo {
+            margin-bottom: 8px;
+        }
+
+        .login-logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            font-weight: 600;
+            color: #9B9BA5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 32px;
+        }
+
+        .login-field {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B6B76;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .login-field input {
+            width: 100%;
+            padding: 12px 44px 12px 14px;
+            border: 1px solid #E8E8EA;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #1F1F20;
+            background: #F8F8F8;
+            transition: all 0.15s;
+            outline: none;
+        }
+
+        .login-field input:focus {
+            border-color: #8B5CF6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+            background: #FFFFFF;
+        }
+
+        .toggle-pw {
+            position: absolute;
+            right: 10px;
+            bottom: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9B9BA5;
+            font-size: 18px;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .toggle-pw:hover { color: #6B6B76; }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #000000;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-top: 4px;
+        }
+
+        .login-btn:hover { background: #222222; }
+        .login-btn:active { transform: scale(0.98); }
+
+        .login-error {
+            color: #EF4444;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .login-footer {
+            margin-top: 28px;
+            font-size: 11px;
+            color: #9B9BA5;
+        }
+
+        .dashboard-hidden { display: none !important; }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 36px 24px; }
+        }
+
+        :root {
+            --fynd-black: #000000;
+            --fynd-dark: #2D2D2E;
+            --fynd-purple: #8B5CF6;
+            --fynd-purple-light: #A78BFA;
+            --fynd-purple-dark: #7C3AED;
+            --fynd-bg: #F8F8F8;
+            --fynd-surface: #FFFFFF;
+            --fynd-surface-alt: #F3F3F5;
+            --fynd-border: #E8E8EA;
+            --fynd-text: #1F1F20;
+            --fynd-text-secondary: #6B6B76;
+            --fynd-text-muted: #9B9BA5;
+            --fynd-green: #10B981;
+            --fynd-green-bg: #ECFDF5;
+            --fynd-amber: #F59E0B;
+            --fynd-amber-bg: #FFFBEB;
+            --fynd-red: #EF4444;
+            --fynd-red-bg: #FEF2F2;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--fynd-bg);
+            color: var(--fynd-text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--fynd-black);
+            padding: 0 24px;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            height: 56px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            height: 26px;
+            width: auto;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar { display: none; }
+
+        .nav-tab {
+            padding: 8px 14px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+
+        .nav-tab:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.08); }
+        .nav-tab.active { color: #FFFFFF; background: var(--fynd-purple); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+
+        /* Main */
+        main {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--fynd-surface);
+            border: 1px solid var(--fynd-border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card:hover { box-shadow: var(--shadow); }
+        .card.summary.active { border-color: var(--fynd-purple); box-shadow: 0 0 0 1px var(--fynd-purple); }
+
+        .card-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--fynd-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-value {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--fynd-text);
+            letter-spacing: -0.5px;
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--fynd-surface);
+            border: 1px solid var(--fynd-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table-scroll { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 900px;
+        }
+
+        th {
+            background: var(--fynd-surface-alt);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--fynd-text-secondary);
+            border-bottom: 1px solid var(--fynd-border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        th.sortable { cursor: pointer; user-select: none; }
+        th.sortable:hover { color: var(--fynd-purple); }
+        th.sortable::after { content: ' ↕'; font-size: 10px; opacity: 0.4; }
+        th.sort-asc::after { content: ' ↑'; opacity: 1; color: var(--fynd-purple); }
+        th.sort-desc::after { content: ' ↓'; opacity: 1; color: var(--fynd-purple); }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--fynd-border);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(139, 92, 246, 0.03); }
+
+        /* Row status */
+        .green-row { border-left: 3px solid var(--fynd-green); }
+        .amber-row { border-left: 3px solid var(--fynd-amber); }
+        .red-row { border-left: 3px solid var(--fynd-red); }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .badge-deal-yes { background: var(--fynd-green-bg); color: #065F46; }
+        .badge-deal-no { background: var(--fynd-surface-alt); color: var(--fynd-text-secondary); }
+        .badge-tech { background: #EDE9FE; color: #5B21B6; }
+        .badge-agency { background: #DBEAFE; color: #1E40AF; }
+        .badge-si { background: #FEF3C7; color: #92400E; }
+        .badge-referral { background: #FCE7F3; color: #9D174D; }
+
+        .deal-stage {
+            display: block;
+            font-size: 11px;
+            color: var(--fynd-text-muted);
+            margin-top: 2px;
+        }
+
+        /* Source link */
+        .source-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--fynd-surface-alt);
+            transition: all 0.15s;
+        }
+
+        .source-link:hover { background: var(--fynd-purple); }
+        .source-link:hover svg { stroke: #FFFFFF; }
+
+        .source-link svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--fynd-text-secondary);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Summary button */
+        .summary-btn {
+            background: var(--fynd-surface-alt);
+            border: 1px solid var(--fynd-border);
+            color: var(--fynd-text-secondary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .summary-btn:hover {
+            background: var(--fynd-purple);
+            color: #FFFFFF;
+            border-color: var(--fynd-purple);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: fadeIn 0.15s;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-card {
+            background: var(--fynd-surface);
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: var(--fynd-surface-alt);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--fynd-text-secondary);
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover { background: var(--fynd-border); color: var(--fynd-text); }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--fynd-text);
+        }
+
+        .modal-chart { height: 220px; margin-bottom: 20px; }
+
+        .modal-summary {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--fynd-text-secondary);
+            margin-bottom: 16px;
+            background: var(--fynd-surface-alt);
+            padding: 14px;
+            border-radius: 8px;
+        }
+
+        .modal-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .modal-stat {
+            background: var(--fynd-surface-alt);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--fynd-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-stat-value {
+            font-weight: 700;
+            color: var(--fynd-text);
+            margin-top: 2px;
+            font-size: 14px;
+        }
+
+        /* Chart container */
+        .chart-container {
+            background: var(--fynd-surface);
+            border: 1px solid var(--fynd-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow-sm);
+            height: 340px;
+        }
+
+        .chart-wrapper { position: relative; height: 100%; }
+
+        .chart-footnote {
+            font-size: 11px;
+            color: var(--fynd-text-muted);
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+            text-align: center;
+            background: var(--fynd-surface);
+            border: 1px solid var(--fynd-border);
+            border-radius: var(--radius);
+        }
+
+        .empty-icon { font-size: 40px; margin-bottom: 14px; opacity: 0.5; }
+        .empty-title { font-size: 15px; font-weight: 600; color: var(--fynd-text); margin-bottom: 6px; }
+        .empty-text { font-size: 13px; color: var(--fynd-text-muted); max-width: 500px; line-height: 1.5; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .summary-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .header-content { gap: 8px; height: auto; padding: 10px 0; flex-wrap: wrap; }
+            .header-left { flex-wrap: wrap; gap: 8px; width: 100%; }
+            .logo-subtitle { display: none; }
+            .logo-divider { display: none; }
+            .header-right { display: none; }
+            main { padding: 14px; }
+            .summary-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .card { padding: 10px 12px; }
+            .card-label { font-size: 10px; }
+            .card-value { font-size: 18px; }
+            .nav-tab { padding: 6px 10px; font-size: 11px; }
+            .nav-tabs { width: 100%; }
+            table { min-width: 600px; font-size: 12px; }
+            th { padding: 8px 10px; font-size: 10px; }
+            td { padding: 8px 10px; font-size: 12px; }
+            .modal-card { padding: 20px; margin: 12px; }
+            .modal-title { font-size: 16px; }
+            .chart-container { height: 260px; padding: 14px; }
+            .modal-stats { gap: 8px; }
+            .modal-stat { padding: 8px 10px; }
+            #sourced-accounts-detail table { min-width: 400px; }
+        }
+
+        @media (max-width: 480px) {
+            .summary-cards { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .card { padding: 8px 10px; }
+            .card-value { font-size: 16px; }
+            header { padding: 0 10px; }
+            main { padding: 10px; }
+            .nav-tab { padding: 5px 8px; font-size: 10px; }
+        }
+
+        /* Print */
+        @media print {
+            header { position: static; background: white; color: black; box-shadow: none; border-bottom: 2px solid var(--fynd-black); }
+            .nav-tab { color: var(--fynd-text); }
+            .nav-tab.active { background: var(--fynd-surface-alt); }
+            body { background: white; }
+        }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    </style>
+</head>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxvh6JK9sr3X1lET9c18cI4KoomGiTm8gSnA&s" alt="Fynd" onerror="this.outerHTML='<span style=&quot;font-size:28px;font-weight:800;color:#1F1F20;letter-spacing:-1px&quot;>FYND</span>'" style="max-height:48px;width:auto;">
+            </div>
+            <div class="login-subtitle">UK Growth Overview</div>
+            <form id="login-form" onsubmit="return false;">
+                <div class="login-field">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password" autocomplete="off" autofocus>
+                    <button type="button" class="toggle-pw" id="toggle-pw" tabindex="-1">&#128065;</button>
+                </div>
+                <button type="submit" class="login-btn" id="login-btn">Sign In</button>
+                <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+            </form>
+            <div class="login-footer">Fynd &middot; Confidential</div>
+        </div>
+    </div>
+
+    <header class="dashboard-hidden" id="dashboard-header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSKUdyA-WBLrNswkwb6CU9OrzFgf5Gp1HPA&s" alt="Fynd" onerror="this.outerHTML='<span style=&quot;font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px&quot;>FYND</span>'">
+                    <div class="logo-divider"></div>
+                    <span class="logo-subtitle">UK Growth Overview</span>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" data-tab="sales-pipeline">Sales Pipeline</button>
+                    <button class="nav-tab" data-tab="partner-pipeline">Partner Pipeline</button>
+                    <button class="nav-tab" data-tab="activity">Activity</button>
+                    <button class="nav-tab" data-tab="events">Events</button>
+                    <button class="nav-tab" data-tab="strategic-moves">Target Partners</button>
+                </nav>
+            </div>
+            <div class="header-right">
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-hidden" id="dashboard-main">
+        <!-- TAB 1: SALES PIPELINE -->
+        <div class="tab-content active" id="sales-pipeline">
+            <div class="summary-cards">
+                <div class="card summary active" data-filter="all">
+                    <div class="card-label">Total Companies</div>
+                    <div class="card-value" id="total-companies">27</div>
+                </div>
+                <div class="card summary" data-filter="with-deal">
+                    <div class="card-label">With Active Deal</div>
+                    <div class="card-value" id="with-deal-count">12</div>
+                </div>
+                <div class="card summary" data-filter="no-deal">
+                    <div class="card-label">No Deal Yet</div>
+                    <div class="card-value" id="no-deal-count">15</div>
+                </div>
+                <div class="card summary" data-filter="with-deal">
+                    <div class="card-label">Deal Value</div>
+                    <div class="card-value" id="sales-deal-value">$824.8K (£624K)</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="sales-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="sortable" data-column="company">Company</th>
+                            <th class="sortable" data-column="partner-name">Source / Partner</th>
+                            <th class="sortable" data-column="deal">Deal</th>
+                            <th class="sortable" data-column="activity-type">Last Activity</th>
+                            <th class="sortable" data-column="days-since">Days</th>
+                            <th class="sortable" data-column="next-steps">Next Steps</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-tbody"></tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: PARTNER PIPELINE -->
+        <div class="tab-content" id="partner-pipeline">
+            <div class="summary-cards">
+                <div class="card summary active" data-filter="all">
+                    <div class="card-label">Total Partners</div>
+                    <div class="card-value" id="total-partners">14</div>
+                </div>
+                <div class="card summary" data-filter="with-deal">
+                    <div class="card-label">With Active Deal</div>
+                    <div class="card-value" id="partner-with-deal">0</div>
+                </div>
+                <div class="card summary" data-filter="no-deal">
+                    <div class="card-label">No Deal Yet</div>
+                    <div class="card-value" id="partner-no-deal">14</div>
+                </div>
+                <div class="card summary" data-filter="with-deal">
+                    <div class="card-label">Deal Value</div>
+                    <div class="card-value" id="partner-deal-value">$0 (£0)</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="partner-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="sortable" data-column="company">Company</th>
+                            <th class="sortable" data-column="partner-name">Source / Partner</th>
+                            <th class="sortable" data-column="partner-type">Type</th>
+                            <th class="sortable" data-column="sourced-accounts">Sourced Accounts</th>
+                            <th class="sortable" data-column="sourced-deal-value">Sourced Deal Value</th>
+                            <th class="sortable" data-column="activity-type">Last Activity</th>
+                            <th class="sortable" data-column="days-since">Days</th>
+                            <th class="sortable" data-column="next-steps">Next Steps</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="partner-tbody"></tbody>
+                </table>
+                <div id="sourced-accounts-detail" style="display:none; margin-top: 16px;">
+                    <h3 style="font-size: 14px; font-weight: 600; color: var(--fynd-text-secondary); margin-bottom: 8px;" id="sourced-detail-title"></h3>
+                    <table id="sourced-detail-table">
+                        <thead><tr><th>Company</th><th>Deal</th><th>Deal Stage</th><th>Days Since Touch</th></tr></thead>
+                        <tbody id="sourced-detail-tbody"></tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: ACTIVITY -->
+        <div class="tab-content" id="activity">
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <canvas id="activity-chart"></canvas>
+                </div>
+            </div>
+            <p class="chart-footnote">Emails: HubSpot pipeline-only (Lists 928 & 943). Meetings: Google Calendar with pipeline contacts. Notes: HubSpot.</p>
+
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="activity-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="month">Month</th>
+                            <th class="sortable" data-column="emails">Emails</th>
+                            <th class="sortable" data-column="meetings">Meetings</th>
+                            <th class="sortable" data-column="notes">Notes</th>
+                            <th class="sortable" data-column="total">Total</th>
+                            <th class="sortable" data-column="vs-prior">vs Prior</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activity-tbody"></tbody>
+                </table>
+                </div>
+            </div>
+
+            <h3 style="margin: 28px 0 12px; font-size: 14px; font-weight: 600; color: var(--fynd-text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Pipeline by Source / Partner</h3>
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="source-breakup-table">
+                    <thead>
+                        <tr>
+                            <th>Source / Partner</th>
+                            <th>Companies</th>
+                            <th>With Deal</th>
+                            <th>% Deal</th>
+                            <th>Total Deal Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="source-breakup-tbody"></tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: EVENTS -->
+        <div class="tab-content" id="events">
+            <div class="summary-cards" id="events-cards">
+                <div class="card summary" data-filter="all">
+                    <div class="card-label">Total Events</div>
+                    <div class="card-value" id="total-events">0</div>
+                </div>
+                <div class="card summary" data-filter="sponsored">
+                    <div class="card-label">Sponsored</div>
+                    <div class="card-value" id="sponsored-count">0</div>
+                </div>
+                <div class="card summary" data-filter="participated">
+                    <div class="card-label">Participated</div>
+                    <div class="card-value" id="participated-count">0</div>
+                </div>
+                <div class="card summary" data-filter="upcoming">
+                    <div class="card-label">Upcoming</div>
+                    <div class="card-value" id="upcoming-count">0</div>
+                </div>
+                <div class="card summary" data-filter="spent">
+                    <div class="card-label">Spent So Far</div>
+                    <div class="card-value" id="spent-so-far">£0</div>
+                </div>
+                <div class="card summary" data-filter="planned">
+                    <div class="card-label">Planned Spend</div>
+                    <div class="card-value" id="planned-spend">£0</div>
+                </div>
+            </div>
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="events-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="month">Month</th>
+                            <th class="sortable" data-column="event">Event</th>
+                            <th class="sortable" data-column="type">Type</th>
+                            <th class="sortable" data-column="cost">Cost (£)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="events-tbody"></tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: STRATEGIC MOVES -->
+        <div class="tab-content" id="strategic-moves">
+            <div class="summary-cards" id="strategic-cards">
+                <div class="card summary" data-filter="all">
+                    <div class="card-label">Total Targets</div>
+                    <div class="card-value" id="total-targets">0</div>
+                </div>
+                <div class="card summary" data-filter="Technology Partner">
+                    <div class="card-label">Technology Partners</div>
+                    <div class="card-value" id="tech-partner-count">0</div>
+                </div>
+                <div class="card summary" data-filter="Implementation Partner">
+                    <div class="card-label">Implementation Partners</div>
+                    <div class="card-value" id="impl-partner-count">0</div>
+                </div>
+            </div>
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="strategic-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="companyName">Company Name</th>
+                            <th class="sortable" data-column="partnerType">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="strategic-tbody"></tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Company activity generator for modals
+        function generateCompanyActivity(daysSince) {
+            const months = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26'];
+            const emails = [0,0,0,0,0,0];
+            const meetings = [0,0,0,0,0,0];
+            if (daysSince <= 14) {
+                emails[5] = Math.floor(Math.random()*8)+5; emails[4] = Math.floor(Math.random()*6)+3;
+                emails[3] = Math.floor(Math.random()*5)+2; emails[2] = Math.floor(Math.random()*3)+1;
+                meetings[5] = Math.floor(Math.random()*2)+1; meetings[4] = Math.floor(Math.random()*2);
+            } else if (daysSince <= 30) {
+                emails[4] = Math.floor(Math.random()*5)+2; emails[3] = Math.floor(Math.random()*6)+3;
+                emails[2] = Math.floor(Math.random()*4)+1; meetings[3] = Math.floor(Math.random()*2);
+            } else {
+                emails[1] = Math.floor(Math.random()*5)+2; emails[0] = Math.floor(Math.random()*4)+1;
+                emails[2] = Math.floor(Math.random()*3); meetings[1] = Math.floor(Math.random()*2);
+            }
+            return { months, emails, meetings };
+        }
+
+        // === DATA ===
+        const salesData = [
+            { hubspotId: '122873662175', company: 'N Brown Group', partnerName: 'Ani Kaprekar', deal: 'Yes (Commerce Deal — $250K (£189K))', dealStage: 'Proposal', activityType: 'Note', activityDate: '16 Mar 2026', daysSince: 0, nextSteps: 'Demo order orchestration for mainframe; close commerce deal', summary: 'Major UK retailer evaluating commerce replatforming for mainframe modernisation. Hackathon demo completed March 5-6 with CTO engaged. $250K commerce deal in Proposal stage — decision expected Q2 2026.' },
+            { hubspotId: '297386798779', company: 'FitFlop Limited', partnerName: 'Validify', deal: 'No', dealStage: '', activityType: 'Note', activityDate: '16 Mar 2026', daysSince: 0, nextSteps: 'Schedule discovery call; explore platform demo opportunity', summary: 'UK footwear brand with recent email campaign engagement. Exploring platform capabilities — no meeting scheduled yet. 11 contacts in HubSpot.' },
+            { hubspotId: '265889184477', company: 'Goddiva', partnerName: 'RTIH Awards', deal: 'Yes (Fynd WMS — $3.2K (£2.4K))', dealStage: 'Closed Won', activityType: 'Note', activityDate: '16 Mar 2026', daysSince: 0, nextSteps: 'Confirm April 14 launch; send brand deck by Wednesday', summary: 'Fast-fashion brand with WMS deal closed won ($3.2K). April 14th launch target for marketplace expansion. Brand deck and sample questions in progress.' },
+            { hubspotId: '196852189900', company: 'Green People', partnerName: 'Validify', deal: 'No', dealStage: '', activityType: 'Note', activityDate: '16 Mar 2026', daysSince: 0, nextSteps: 'Schedule follow-up call; explore AI beauty solutions', summary: 'Organic beauty brand actively engaging via email. Exploring AI and commerce solutions. 3 contacts in HubSpot.' },
+            { hubspotId: '311267298013', company: 'Hobbycraft Trading Limited', partnerName: 'Madris Consult', deal: 'Yes (OMS Deal — $200K (£151K))', dealStage: 'Qualification', activityType: 'Email', activityDate: '13 Mar 2026', daysSince: 3, nextSteps: 'Submit commercial details; decision expected end of March', summary: 'Major UK craft retailer in OMS deal qualification ($200K). Matt Louth leading evaluation — shortened shortlist with decision by end March 2026. Demo completed, commercial details requested.' },
+            { hubspotId: '300406739674', company: 'Ghost', partnerName: 'Validify', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '13 Mar 2026', daysSince: 3, nextSteps: 'Research PE ownership; explore portfolio approach via Tuku Sillman', summary: 'UK fashion brand owned by PE firm Tuku Sillman. Portfolio approach being explored. Active email engagement.' },
+            { hubspotId: '299258087155', company: 'PRMF Limited', partnerName: 'Carriyo', deal: 'Yes (TMS Deal)', dealStage: 'Discovery', activityType: 'Note', activityDate: '13 Mar 2026', daysSince: 3, nextSteps: 'Provide vehicle specs for Google Maps HGV routing verification', summary: 'UK logistics company with TMS deal in discovery. Paula Rosa Manhattan — vehicle specifications needed for Google Maps HGV routing verification.' },
+            { hubspotId: '301825008352', company: 'Arkmedes', partnerName: 'Inbound', deal: 'Yes (Storefront Deal)', dealStage: 'Qualification', activityType: 'Meeting', activityDate: '10 Mar 2026', daysSince: 6, nextSteps: 'Complete Commerce/WMS/TMS demo; advance storefront qualification', summary: 'UK startup with storefront deal in qualification. Demo covering Commerce, WMS, TMS systems completed. Technical evaluation ongoing.' },
+            { hubspotId: '55772976879', company: 'NEW BALANCE', partnerName: 'TRB eComm North', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '09 Mar 2026', daysSince: 7, nextSteps: 'Send international brand case studies and example URLs to Liam', summary: 'Global sports brand exploring partnership for emerging markets. Case studies requested by Liam Preston for global team presentation. 4 contacts in HubSpot.' },
+            { hubspotId: '265261330166', company: 'Nina D', partnerName: 'TRB eComm North', deal: 'Yes (Storefront & B2B Deal)', dealStage: 'Discovery', activityType: 'Email', activityDate: '04 Mar 2026', daysSince: 12, nextSteps: 'Send B2B/B2C proposal with WMS scaling and Nurture Program', summary: 'UK jewellery brand with storefront & B2B deal in discovery. Proposal covering B2B/B2C, WMS scaling, and Nurture Program being prepared.' },
+            { hubspotId: '183503713990', company: "Heal\u2019s PLC", partnerName: 'Validify', deal: 'Yes (GlamAR — $12K (£9.1K))', dealStage: 'Proposal', activityType: 'Email', activityDate: '04 Mar 2026', daysSince: 12, nextSteps: 'Obtain high-res product images for 3D GlamAR modelling', summary: 'Iconic UK furniture retailer with GlamAR deal in proposal ($12K). High-resolution product images needed for 3D product modelling requirements.' },
+            { hubspotId: '111133860570', company: 'SCAMP & DUDE', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Note', activityDate: '04 Mar 2026', daysSince: 12, nextSteps: 'Re-engage on AI PIM; schedule product demo call', summary: 'UK fashion brand exploring AI PIM. Active email campaign engagement across 12 contacts. Last meeting touch was in early March.' },
+            { hubspotId: '267450998501', company: 'VELTUFF Workwear', partnerName: 'Fynd', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '03 Mar 2026', daysSince: 13, nextSteps: 'Follow up on workwear platform requirements discussion', summary: 'UK workwear brand with 7 contacts. Active outreach via email campaigns. Exploring platform fit for workwear commerce.' },
+            { hubspotId: '230170241760', company: 'Laithwaites Wine Limited', partnerName: 'Validify', deal: 'Yes (Commerce Replatforming — $300K (£227K))', dealStage: 'Qualification', activityType: 'Note', activityDate: '02 Mar 2026', daysSince: 14, nextSteps: 'Push commerce replatforming deal forward; schedule review', summary: 'Major UK wine retailer with $300K commerce replatforming deal in qualification. 2 contacts in HubSpot. Active nurturing ongoing.' },
+            { hubspotId: '174215631595', company: 'Kurt Geiger Limited', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '23 Feb 2026', daysSince: 21, nextSteps: 'Re-engage after 21d gap; schedule follow-up call', summary: 'Premium UK footwear/accessories brand with 4 contacts. Engaged via email Feb 2026. Needs re-engagement — 21 day gap.' },
+            { hubspotId: '171914888940', company: 'LILY & ROO LTD', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Note', activityDate: '23 Feb 2026', daysSince: 21, nextSteps: 'Re-engage after 21d gap; explore storefront fit', summary: 'UK jewellery brand. Single contact. Last engagement via note in Feb 2026. Needs re-engagement — 21 day gap.' },
+            { hubspotId: '303408771828', company: 'Greek Project', partnerName: 'Inbound', deal: 'No', dealStage: '', activityType: '—', activityDate: '26 Feb 2026', daysSince: 18, nextSteps: 'Complete initial outreach; schedule discovery call', summary: 'New account created Feb 2026. 1 contact. Initial outreach phase — no activity recorded yet.' },
+            { hubspotId: '111302840017', company: 'Perfect Moment', partnerName: 'Fynd', deal: 'Yes (AI PIM — $9.6K (£7.3K))', dealStage: 'Qualification', activityType: 'Email', activityDate: '05 Feb 2026', daysSince: 39, nextSteps: 'Re-engage on AI PIM deal; share updated proposal', summary: 'Luxury ski/activewear brand with AI PIM deal in qualification ($9.6K). 9 contacts. Engagement dropped off after Feb 2026.' },
+            { hubspotId: '205378378480', company: 'Luca Faloni Limited', partnerName: 'Fynd', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '02 Feb 2026', daysSince: 42, nextSteps: 'Re-engage after 42d gap; propose AI PIM demo', summary: 'Italian-British luxury menswear brand. 1 contact. Last engagement Feb 2026. Needs re-engagement.' },
+            { hubspotId: '62058268405', company: "Levi\u2019s", partnerName: 'Nexbuzz', deal: 'Yes (AI Photoshoot — $2K (£1.5K))', dealStage: 'Qualification', activityType: 'Email', activityDate: '19 Jan 2026', daysSince: 56, nextSteps: 'Follow up AI Photoshoot deal; share latest campaign results', summary: 'Global denim brand with AI Photoshoot deal in qualification ($2K). 15 contacts. Last engagement Jan 2026 — significant gap.' },
+            { hubspotId: '175167402735', company: 'United Legwear & Apparel UK', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '19 Jan 2026', daysSince: 56, nextSteps: 'Re-engage after 56d gap; explore UK apparel needs', summary: 'UK apparel company. 1 contact. Last engagement Jan 2026. 56 day gap — needs re-engagement.' },
+            { hubspotId: '200330983109', company: 'All Saints Retail Limited', partnerName: 'Fynd', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '12 Jan 2026', daysSince: 63, nextSteps: 'Research Lion Capital PE ownership for portfolio approach', summary: 'Major UK fashion retailer owned by Lion Capital PE. 6 contacts. Portfolio approach recommended. 63 day gap since last touch.' },
+            { hubspotId: '175241275115', company: 'Believ Limited', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '12 Jan 2026', daysSince: 63, nextSteps: 'Re-engage after 63d gap; schedule catch-up call', summary: 'UK brand. 1 contact. Last engagement Jan 2026. 63 day gap — needs immediate re-engagement.' },
+            { hubspotId: '182517086944', company: 'Kingpin Limited', partnerName: 'Fynd', deal: 'Yes (AI PIM — $48K (£36.3K))', dealStage: 'Qualification', activityType: 'Email', activityDate: '11 Dec 2025', daysSince: 95, nextSteps: 'Follow up AI PIM test account; request user feedback', summary: 'UK brand with AI PIM deal in qualification ($48K). 5 contacts. Last engagement Dec 2025 — 95 day gap.' },
+            { hubspotId: '175217902274', company: 'Acushnet Europe Limited', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '09 Dec 2025', daysSince: 97, nextSteps: 'Re-engage after 97d gap on golf brand platform needs', summary: 'Golf equipment company (Titleist parent). 1 contact. Last engagement Dec 2025 — 97 day gap. Needs urgent re-engagement.' },
+            { hubspotId: '70904470216', company: 'Marks & Spencer Group plc', partnerName: 'Retail Racing', deal: 'No', dealStage: '', activityType: 'Email', activityDate: '01 Dec 2025', daysSince: 105, nextSteps: 'Urgent: re-engage after 105d gap; restart outreach', summary: 'Major UK high street retailer. 5 contacts. Last engagement Dec 2025 — 105 day gap. Critical to re-engage.' },
+            { hubspotId: '171651669745', company: 'MandM', partnerName: 'Validify', deal: 'No', dealStage: '', activityType: 'Note', activityDate: '15 Oct 2025', daysSince: 152, nextSteps: 'Critical: 152d cold; immediate restart required', summary: 'UK discount fashion retailer. 4 contacts. Last engagement Oct 2025 — 152 day gap. Urgently needs restart.' }
+        ];
+
+        const partnerData = [
+            { hubspotId: '291277505137', company: 'Madris Consulting', partnerName: 'Phil Boyle', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 3, nextSteps: 'Finalise partnership; schedule 23 Mar founder meeting', summary: 'Technology consulting partner. Matt ready to provide client introductions after partnership formalised. Meeting with Fynd founder scheduled 23 March.' },
+            { hubspotId: '237063698095', company: 'Dynamic Yield by Mastercard', partnerName: 'Fynd', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 3, nextSteps: 'Complete Crossbeam account mapping for joint opportunities', summary: 'Technology partner for personalisation. Crossbeam account mapping planned for joint opportunity identification. Fortnightly catch-ups established.' },
+            { hubspotId: '175135413694', company: 'Validify Limited', partnerName: 'Fynd', partnerType: 'Brand Referral', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 3, nextSteps: 'Complete vendor onboarding form; access retailer matching', summary: 'Brand referral partner with retailer matching system. Vendor onboarding form needed. Dyson replatforming opportunity identified.' },
+            { hubspotId: '295025671959', company: 'nShift', partnerName: 'TRB eComm North', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Note', daysSince: 6, nextSteps: 'Review and negotiate standard partnership agreement terms', summary: 'Logistics technology partner. Standard partnership agreement sent by Mark for commercial review. Technical teams ready to meet.' },
+            { hubspotId: '291277510704', company: 'Digitally Driven Consultancy', partnerName: 'TRB eComm North', partnerType: 'Agency', deal: 'No', dealStage: '', activityType: 'Note', daysSince: 6, nextSteps: 'Schedule one-hour platform demo before March meeting', summary: 'Digital marketing agency partner. Andy ready for full platform demonstration. March in-person meeting planned.' },
+            { hubspotId: '297032023826', company: 'Timberyard Commerce', partnerName: 'Validify', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Meeting', daysSince: 6, nextSteps: 'Follow up April white paper/event collaboration feedback', summary: 'Technology partner (Paul Green). Internal team discussion on April white paper/event collaboration ongoing. Services deck exchange planned.' },
+            { hubspotId: '296218024389', company: 'Project Orange', partnerName: 'TRB eComm North', partnerType: 'Agency', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 10, nextSteps: 'Develop specific partnership proposal for brand intros', summary: 'Management consulting agency. Giles interested in partnership for brand awareness and intelligence. Concrete proposal structure needed.' },
+            { hubspotId: '175063069709', company: 'TikTok Pte. Ltd.', partnerName: 'Inbound', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 18, nextSteps: 'Register as UK TikTok Shop Partner using info booklet', summary: 'Media technology partner. Eve to send UK TikTok Shop Partner registration booklet. Enables onboarding UK clients as TikTok sellers.' },
+            { hubspotId: '175060025113', company: 'Dentsu UK Limited', partnerName: 'Fynd', partnerType: 'Agency', deal: 'No', dealStage: '', activityType: 'Note', daysSince: 21, nextSteps: 'Re-engage after 21d gap; explore agency partnership', summary: 'Major global agency partner. 21 day gap since last touch. Needs re-engagement on partnership scope.' },
+            { hubspotId: '175110655453', company: 'Rixxo', partnerName: 'Fynd', partnerType: 'SI', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 53, nextSteps: 'Re-engage on SI partnership; propose joint client pilot', summary: 'Systems integrator partner. 53 day gap. Needs re-engagement with joint client pilot proposal.' },
+            { hubspotId: '175031723990', company: 'Harmonise Solutions Limited', partnerName: 'Fynd', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Note', daysSince: 54, nextSteps: 'Re-engage after 54d gap; revive tech partnership', summary: 'Technology partner. 54 day gap since last engagement. Partnership discussions need revival.' },
+            { hubspotId: '161606361973', company: 'HiveB2X LLC', partnerName: 'Fynd', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 68, nextSteps: 'Re-engage on GTM partnership after 68d gap', summary: 'GTM technology partner. 68 day gap. Needs re-engagement with updated partnership value proposition.' },
+            { hubspotId: '175197427700', company: 'Vajra Global', partnerName: 'Ani Kaprekar', partnerType: 'Technology', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 88, nextSteps: 'Re-engage; evaluate UK fashion client requirements', summary: 'HubSpot platinum partner with AI labs. UK fashion client exploring ecommerce. Evaluating customer requirements through workshops.' },
+            { hubspotId: '173735693975', company: 'Prospero', partnerName: 'Fynd', partnerType: 'SI', deal: 'No', dealStage: '', activityType: 'Email', daysSince: 118, nextSteps: 'Critical: 118d cold; restart SI partnership outreach', summary: 'Systems integrator partner. 118 day gap — critical. Partnership outreach needs immediate restart.' }
+        ];
+
+        const activityData = [
+            { month: 'Oct 2025', emails: 89, meetings: 17, notes: 8, total: 114, priorMonthTotal: 0 },
+            { month: 'Nov 2025', emails: 84, meetings: 18, notes: 7, total: 109, priorMonthTotal: 114 },
+            { month: 'Dec 2025', emails: 82, meetings: 9, notes: 10, total: 101, priorMonthTotal: 109 },
+            { month: 'Jan 2026', emails: 74, meetings: 17, notes: 5, total: 96, priorMonthTotal: 101 },
+            { month: 'Feb 2026', emails: 100, meetings: 25, notes: 21, total: 146, priorMonthTotal: 96 },
+            { month: 'Mar 2026', emails: 65, meetings: 15, notes: 16, total: 96, priorMonthTotal: 146 }
+        ];
+
+        activityData.forEach(item => {
+            if (item.priorMonthTotal > 0) {
+                const change = ((item.total - item.priorMonthTotal) / item.priorMonthTotal * 100).toFixed(1);
+                item.vsPrior = change >= 0 ? `+${change}%` : `${change}%`;
+            } else {
+                item.vsPrior = '—';
+            }
+        });
+
+        // === EVENTS DATA ===
+        const eventsData = [
+            { month: 'Sep 25', event: 'Retail Racing', type: 'Sponsored', cost: 6000 },
+            { month: 'Jan 26', event: 'Cirque du Soleil', type: 'Sponsored', cost: 3000 },
+            { month: 'Jan 26', event: 'RTIH', type: 'Sponsored', cost: 750 },
+            { month: 'Feb 26', event: 'eComm North', type: 'Sponsored', cost: 5000 },
+            { month: 'Feb 26', event: 'Validify Dinner', type: 'Participated', cost: 0 },
+            { month: 'Apr 26', event: 'The Agentic Commerce (Novotel)', type: 'Participated', cost: 2000 },
+            { month: 'Apr 26', event: 'Retail Technology Show', type: 'Participated', cost: 0 },
+            { month: 'Apr 26', event: 'Webinar', type: 'Sponsored', cost: 2250 },
+            { month: 'Apr 26', event: 'Lunch Event with Davina', type: 'Sponsored', cost: 5000 },
+            { month: 'May 26', event: 'TFN Network for Fynd Create', type: 'Sponsored', cost: 5000 },
+            { month: 'May 26', event: 'Tech Tuesdays', type: 'Sponsored', cost: 5000 },
+            { month: 'May 26', event: 'Anthropic + Fynd Event', type: 'Sponsored', cost: 10000 },
+            { month: 'Jul 26', event: 'Source Fashion London', type: 'Sponsored', cost: 15000 },
+            { month: 'Nov 26', event: 'WhiteLabelExpo', type: 'Sponsored', cost: 7500 }
+        ];
+
+        // Determine status based on month
+        const monthOrder = {'Sep 25':0,'Oct 25':1,'Nov 25':2,'Dec 25':3,'Jan 26':4,'Feb 26':5,'Mar 26':6,'Apr 26':7,'May 26':8,'Jun 26':9,'Jul 26':10,'Aug 26':11,'Sep 26':12,'Oct 26':13,'Nov 26':14,'Dec 26':15,'Jan 27':16,'Feb 27':17};
+        const currentMonthIdx = 6; // Mar 26
+        eventsData.forEach(e => {
+            const idx = monthOrder[e.month] ?? 99;
+            e.status = idx < currentMonthIdx ? 'Spent' : idx === currentMonthIdx ? 'Spent' : 'Planned';
+        });
+
+        // === STRATEGIC MOVES DATA ===
+        const strategicData = [
+            { companyName: 'Klarna', partnerType: 'Technology Partner' },
+            { companyName: 'And Digital', partnerType: 'Implementation Partner' },
+            { companyName: 'Mirakl', partnerType: 'Technology Partner' },
+            { companyName: 'Rithum', partnerType: 'Technology Partner' },
+            { companyName: 'Adyen', partnerType: 'Technology Partner' },
+            { companyName: 'Clearpay', partnerType: 'Technology Partner' },
+            { companyName: 'Checkout', partnerType: 'Technology Partner' },
+            { companyName: 'Worldpay', partnerType: 'Technology Partner' }
+        ];
+
+        // === UTILITIES ===
+        function getDaysSinceClass(days) {
+            if (days <= 14) return 'green-row';
+            if (days <= 30) return 'amber-row';
+            return 'red-row';
+        }
+
+        function getDealBadgeClass(deal) {
+            return deal === 'No' ? 'badge-deal-no' : 'badge-deal-yes';
+        }
+
+        function getPartnerTypeBadgeClass(type) {
+            return { 'Technology': 'badge-tech', 'Agency': 'badge-agency', 'SI': 'badge-si', 'Brand Referral': 'badge-referral' }[type] || 'badge-tech';
+        }
+
+        function hasDeal(deal) { return deal !== 'No'; }
+
+        function formatDate(dateStr) {
+            const [day, month, year] = dateStr.split(' ');
+            return new Date(`${month} ${day}, ${year}`).getTime();
+        }
+
+        function renderDealCell(deal, dealStage) {
+            let html = `<span class="badge ${getDealBadgeClass(deal)}">${deal}</span>`;
+            if (dealStage) html += `<span class="deal-stage">\u21B3 ${dealStage}</span>`;
+            return html;
+        }
+
+        // === MODAL ===
+        let modalChart = null;
+
+        function openModal(companyName, data, type) {
+            let company = type === 'sales' ? salesData.find(c => c.company === companyName) : partnerData.find(c => c.company === companyName);
+            if (!company) return;
+
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+
+            const card = document.createElement('div');
+            card.className = 'modal-card';
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'modal-close';
+            closeBtn.innerHTML = '\u00D7';
+            closeBtn.addEventListener('click', () => { overlay.remove(); if (modalChart) { modalChart.destroy(); modalChart = null; } });
+            card.appendChild(closeBtn);
+
+            const title = document.createElement('div');
+            title.className = 'modal-title';
+            title.textContent = companyName;
+            card.appendChild(title);
+
+            const chartContainer = document.createElement('div');
+            chartContainer.className = 'modal-chart';
+            const canvas = document.createElement('canvas');
+            chartContainer.appendChild(canvas);
+            card.appendChild(chartContainer);
+
+            const ad = generateCompanyActivity(company.daysSince);
+            if (modalChart) { modalChart.destroy(); }
+
+            modalChart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: ad.months,
+                    datasets: [
+                        { label: 'Emails', data: ad.emails, borderColor: '#8B5CF6', backgroundColor: 'rgba(139,92,246,0.08)', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#8B5CF6' },
+                        { label: 'Meetings', data: ad.meetings, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.08)', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#10B981' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false }, ticks: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#9B9BA5' } },
+                        x: { grid: { display: false }, ticks: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#9B9BA5' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: "'Inter', sans-serif", size: 12, weight: '600' }, color: '#1F1F20', padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+                        tooltip: { backgroundColor: '#1F1F20', titleFont: { family: "'Inter', sans-serif", size: 11 }, bodyFont: { family: "'Inter', sans-serif", size: 11 }, padding: 10, borderRadius: 6, mode: 'index', intersect: false }
+                    }
+                }
+            });
+
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'modal-summary';
+            summaryDiv.textContent = company.summary;
+            card.appendChild(summaryDiv);
+
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'modal-stats';
+            [['Deal', company.deal !== 'No' ? 'Yes' : 'No'], ['Days Since Touch', company.daysSince], ['Last Activity', company.activityType]].forEach(([label, value]) => {
+                const stat = document.createElement('div');
+                stat.className = 'modal-stat';
+                stat.innerHTML = `<div class="modal-stat-label">${label}</div><div class="modal-stat-value">${value}</div>`;
+                statsDiv.appendChild(stat);
+            });
+            card.appendChild(statsDiv);
+
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) { overlay.remove(); if (modalChart) { modalChart.destroy(); modalChart = null; } } });
+            overlay.appendChild(card);
+            document.body.appendChild(overlay);
+        }
+
+        // === RENDER TABLES ===
+        function renderSalesTable(data, filter = 'all') {
+            const tbody = document.getElementById('sales-tbody');
+            tbody.innerHTML = '';
+            let filtered = data;
+            if (filter === 'with-deal') filtered = data.filter(r => hasDeal(r.deal));
+            else if (filter === 'no-deal') filtered = data.filter(r => !hasDeal(r.deal));
+
+            filtered.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = getDaysSinceClass(row.daysSince);
+                tr.innerHTML = `
+                    <td><a href="https://app.hubspot.com/contacts/49150562/record/0-2/${row.hubspotId}" target="_blank" class="source-link" title="View in HubSpot"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+                    <td><strong>${row.company}</strong></td>
+                    <td>${row.partnerName}</td>
+                    <td>${renderDealCell(row.deal, row.dealStage)}</td>
+                    <td>${row.activityType}</td>
+                    <td>${row.daysSince}</td>
+                    <td>${row.nextSteps}</td>
+                    <td><button class="summary-btn" data-company="${row.company}">Summary</button></td>`;
+                tbody.appendChild(tr);
+            });
+
+            tbody.querySelectorAll('.summary-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => openModal(e.target.dataset.company, salesData, 'sales'));
+            });
+
+            document.getElementById('total-companies').textContent = data.length;
+            document.getElementById('with-deal-count').textContent = data.filter(r => hasDeal(r.deal)).length;
+            document.getElementById('no-deal-count').textContent = data.filter(r => !hasDeal(r.deal)).length;
+        }
+
+        // Map partner company names to sales source values
+        const partnerSourceMap = {
+            'Madris Consulting': 'Madris Consult',
+            'Dynamic Yield by Mastercard': null,
+            'Validify Limited': 'Validify',
+            'nShift': null,
+            'Digitally Driven Consultancy': null,
+            'Timberyard Commerce': null,
+            'Project Orange': null,
+            'TikTok Pte. Ltd.': null,
+            'Dentsu UK Limited': null,
+            'Rixxo': null,
+            'Harmonise Solutions Limited': null,
+            'HiveB2X LLC': null,
+            'Vajra Global': null,
+            'Prospero': null,
+        };
+
+        function getSourcedAccounts(partnerCompany) {
+            const sourceKey = partnerSourceMap[partnerCompany];
+            if (!sourceKey) return { accounts: [], dealValue: 0 };
+            const accounts = salesData.filter(r => r.partnerName === sourceKey);
+            let dealValue = 0;
+            accounts.forEach(r => {
+                if (hasDeal(r.deal)) {
+                    const valMatch = r.deal.match(/\$[\d,.]+K/);
+                    if (valMatch) dealValue += parseFloat(valMatch[0].replace('$','').replace('K','').replace(',','')) * 1000;
+                }
+            });
+            return { accounts, dealValue };
+        }
+
+        function showSourcedDetail(partnerCompany) {
+            const detail = document.getElementById('sourced-accounts-detail');
+            const { accounts } = getSourcedAccounts(partnerCompany);
+            if (accounts.length === 0) { detail.style.display = 'none'; return; }
+            document.getElementById('sourced-detail-title').textContent = `Accounts sourced by ${partnerCompany}`;
+            const tbody = document.getElementById('sourced-detail-tbody');
+            tbody.innerHTML = '';
+            accounts.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = getDaysSinceClass(row.daysSince);
+                tr.innerHTML = `<td><strong>${row.company}</strong></td><td>${renderDealCell(row.deal, row.dealStage)}</td><td>${row.dealStage || '—'}</td><td>${row.daysSince}</td>`;
+                tbody.appendChild(tr);
+            });
+            detail.style.display = 'block';
+            detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function renderPartnerTable(data, filter = 'all') {
+            const tbody = document.getElementById('partner-tbody');
+            tbody.innerHTML = '';
+            document.getElementById('sourced-accounts-detail').style.display = 'none';
+            let filtered = data;
+            if (filter === 'with-deal') filtered = data.filter(r => { const s = getSourcedAccounts(r.company); return s.accounts.some(a => hasDeal(a.deal)); });
+            else if (filter === 'no-deal') filtered = data.filter(r => { const s = getSourcedAccounts(r.company); return !s.accounts.some(a => hasDeal(a.deal)); });
+
+            filtered.forEach(row => {
+                const { accounts, dealValue } = getSourcedAccounts(row.company);
+                const acctCount = accounts.length;
+                const valStr = dealValue > 0 ? '$' + (dealValue/1000).toFixed(0) + 'K (£' + Math.round(dealValue * 0.756 / 1000) + 'K)' : '—';
+                const acctCell = acctCount > 0 ? `<a href="#" class="sourced-link" data-partner="${row.company}" style="color:var(--fynd-purple);text-decoration:underline;cursor:pointer">${acctCount}</a>` : '0';
+                const tr = document.createElement('tr');
+                tr.className = getDaysSinceClass(row.daysSince);
+                tr.innerHTML = `
+                    <td><a href="https://app.hubspot.com/contacts/49150562/record/0-2/${row.hubspotId}" target="_blank" class="source-link" title="View in HubSpot"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>
+                    <td><strong>${row.company}</strong></td>
+                    <td>${row.partnerName}</td>
+                    <td><span class="badge ${getPartnerTypeBadgeClass(row.partnerType)}">${row.partnerType}</span></td>
+                    <td>${acctCell}</td>
+                    <td>${valStr}</td>
+                    <td>${row.activityType}</td>
+                    <td>${row.daysSince}</td>
+                    <td>${row.nextSteps}</td>
+                    <td><button class="summary-btn" data-company="${row.company}">Summary</button></td>`;
+                tbody.appendChild(tr);
+            });
+
+            tbody.querySelectorAll('.summary-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => openModal(e.target.dataset.company, partnerData, 'partner'));
+            });
+            tbody.querySelectorAll('.sourced-link').forEach(link => {
+                link.addEventListener('click', (e) => { e.preventDefault(); showSourcedDetail(e.target.dataset.partner); });
+            });
+
+            document.getElementById('total-partners').textContent = data.length;
+            const partnersWithDeal = data.filter(r => { const s = getSourcedAccounts(r.company); return s.accounts.some(a => hasDeal(a.deal)); });
+            document.getElementById('partner-with-deal').textContent = partnersWithDeal.length;
+            document.getElementById('partner-no-deal').textContent = data.length - partnersWithDeal.length;
+            let totalSourcedValue = 0;
+            data.forEach(r => { totalSourcedValue += getSourcedAccounts(r.company).dealValue; });
+            const tvK = (totalSourcedValue / 1000).toFixed(0);
+            const tvGBP = Math.round(totalSourcedValue * 0.756 / 1000);
+            document.getElementById('partner-deal-value').textContent = totalSourcedValue > 0 ? `$${tvK}K (£${tvGBP}K)` : '$0 (£0)';
+        }
+
+        function renderActivityTable(data) {
+            const tbody = document.getElementById('activity-tbody');
+            tbody.innerHTML = '';
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${row.month}</td><td>${row.emails}</td><td>${row.meetings}</td><td>${row.notes}</td><td><strong>${row.total}</strong></td><td>${row.vsPrior}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // === CHART ===
+        let activityChart = null;
+        function initActivityChart() {
+            const ctx = document.getElementById('activity-chart');
+            if (!ctx) return;
+            if (activityChart) activityChart.destroy();
+
+            activityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: activityData.map(d => d.month),
+                    datasets: [
+                        { label: 'Emails', data: activityData.map(d => d.emails), backgroundColor: '#8B5CF6', borderRadius: 3, borderSkipped: false },
+                        { label: 'Meetings', data: activityData.map(d => d.meetings), backgroundColor: '#10B981', borderRadius: 3, borderSkipped: false },
+                        { label: 'Notes', data: activityData.map(d => d.notes), backgroundColor: '#D4D4D8', borderRadius: 3, borderSkipped: false }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false }, ticks: { font: { family: "'Inter', sans-serif", size: 12 }, color: '#6B6B76' } },
+                        y: { stacked: true, grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false }, ticks: { font: { family: "'Inter', sans-serif", size: 12 }, color: '#6B6B76' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: "'Inter', sans-serif", size: 12, weight: '600' }, color: '#1F1F20', padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+                        tooltip: { backgroundColor: '#1F1F20', titleFont: { family: "'Inter', sans-serif", size: 11 }, bodyFont: { family: "'Inter', sans-serif", size: 11 }, padding: 10, borderRadius: 6, mode: 'index', intersect: false }
+                    }
+                }
+            });
+        }
+
+        // === SORT ===
+        function sortTable(tableId, column, data) {
+            const isAsc = document.querySelector(`#${tableId} th[data-column="${column}"]`).classList.contains('sort-asc');
+            document.querySelectorAll(`#${tableId} th`).forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+            document.querySelector(`#${tableId} th[data-column="${column}"]`).classList.add(isAsc ? 'sort-desc' : 'sort-asc');
+
+            data.sort((a, b) => {
+                const key = column.replace(/-([a-z])/g, (m, c) => c.toUpperCase());
+                let aVal = a[key], bVal = b[key];
+                if (['days-since','emails','meetings','notes','total'].includes(column)) { aVal = parseInt(aVal); bVal = parseInt(bVal); }
+                if (typeof aVal === 'string') { aVal = aVal.toLowerCase(); bVal = bVal.toLowerCase(); }
+                if (aVal < bVal) return isAsc ? 1 : -1;
+                if (aVal > bVal) return isAsc ? -1 : 1;
+                return 0;
+            });
+
+            if (tableId === 'sales-table') renderSalesTable(data);
+            else if (tableId === 'partner-table') renderPartnerTable(data);
+            else if (tableId === 'activity-table') renderActivityTable(data);
+        }
+
+        // === TAB SWITCHING ===
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            if (tabName === 'activity' && !activityChart) setTimeout(initActivityChart, 100);
+        }
+
+        function setupCardFiltering(containerId, tableId, data) {
+            document.querySelectorAll(`#${containerId} .card.summary`).forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll(`#${containerId} .card.summary`).forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    if (tableId === 'sales-table') renderSalesTable(data, card.dataset.filter);
+                    else if (tableId === 'partner-table') renderPartnerTable(data, card.dataset.filter);
+                });
+            });
+        }
+
+        // === INIT ===
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const tableId = th.closest('table').id;
+                let data;
+                if (tableId === 'sales-table') data = salesData;
+                else if (tableId === 'partner-table') data = partnerData;
+                else if (tableId === 'activity-table') data = activityData;
+                else if (tableId === 'events-table') data = eventsData;
+                else if (tableId === 'strategic-table') data = strategicData;
+                if (!data) return;
+                sortTable(tableId, th.dataset.column, data);
+                if (tableId === 'events-table') renderEventsTable(data);
+                else if (tableId === 'strategic-table') renderStrategicTable(data);
+            });
+        });
+
+        // === EVENTS RENDER ===
+        function renderEventsTable(data, filter = 'all') {
+            const tbody = document.getElementById('events-tbody');
+            const table = document.getElementById('events-table');
+            tbody.innerHTML = '';
+
+            if (filter === 'spent' || filter === 'planned') {
+                // Show month-on-month spend breakup for spent or planned
+                table.querySelector('thead').innerHTML = `<tr><th>Month</th><th>Events</th><th>Spend (£)</th><th>Cumulative (£)</th><th>Status</th></tr>`;
+                const targetStatus = filter === 'spent' ? 'Spent' : 'Planned';
+                const filteredData = data.filter(e => e.status === targetStatus);
+                const monthMap = {};
+                filteredData.forEach(e => {
+                    if (!monthMap[e.month]) monthMap[e.month] = { spend: 0, events: [] };
+                    monthMap[e.month].spend += e.cost;
+                    monthMap[e.month].events.push(e.event);
+                });
+                const months = ['Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26','Sep 26','Oct 26','Nov 26'];
+                let cumulative = 0;
+                months.forEach(m => {
+                    if (monthMap[m]) {
+                        cumulative += monthMap[m].spend;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td><strong>${m}</strong></td><td>${monthMap[m].events.join(', ')}</td><td>£${monthMap[m].spend.toLocaleString()}</td><td>£${cumulative.toLocaleString()}</td><td><span class="badge ${targetStatus === 'Spent' ? 'badge-deal-no' : 'badge-deal-yes'}">${targetStatus}</span></td>`;
+                        tbody.appendChild(tr);
+                    }
+                });
+            } else {
+                // Standard event list
+                table.querySelector('thead').innerHTML = `<tr><th class="sortable" data-column="month">Month</th><th class="sortable" data-column="event">Event</th><th class="sortable" data-column="type">Type</th><th class="sortable" data-column="cost">Cost (£)</th><th>Status</th></tr>`;
+                let filtered = data;
+                if (filter === 'sponsored') filtered = data.filter(r => r.type === 'Sponsored');
+                else if (filter === 'participated') filtered = data.filter(r => r.type === 'Participated');
+                else if (filter === 'upcoming') filtered = data.filter(r => r.status === 'Planned');
+
+                filtered.forEach(row => {
+                    const tr = document.createElement('tr');
+                    const statusClass = row.status === 'Spent' ? 'badge-deal-no' : 'badge-deal-yes';
+                    tr.innerHTML = `
+                        <td>${row.month}</td>
+                        <td><strong>${row.event}</strong></td>
+                        <td><span class="badge ${row.type === 'Sponsored' ? 'badge-deal-yes' : 'badge-agency'}">${row.type}</span></td>
+                        <td>${row.cost > 0 ? '£' + row.cost.toLocaleString() : 'Free'}</td>
+                        <td><span class="badge ${statusClass}">${row.status}</span></td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            const realEvents = data.filter(e => e.event !== 'NA' && e.event !== 'Not Planned');
+            document.getElementById('total-events').textContent = realEvents.length;
+            document.getElementById('sponsored-count').textContent = realEvents.filter(r => r.type === 'Sponsored').length;
+            document.getElementById('participated-count').textContent = realEvents.filter(r => r.type === 'Participated').length;
+            document.getElementById('upcoming-count').textContent = realEvents.filter(r => r.status === 'Planned').length;
+            const spentTotal = realEvents.filter(r => r.status === 'Spent').reduce((s, r) => s + r.cost, 0);
+            const plannedTotal = realEvents.filter(r => r.status === 'Planned').reduce((s, r) => s + r.cost, 0);
+            document.getElementById('spent-so-far').textContent = '£' + spentTotal.toLocaleString();
+            document.getElementById('planned-spend').textContent = '£' + plannedTotal.toLocaleString();
+        }
+
+        // === SOURCE / PARTNER BREAKUP ===
+        function renderSourceBreakup() {
+            const tbody = document.getElementById('source-breakup-tbody');
+            tbody.innerHTML = '';
+            const sourceMap = {};
+            salesData.forEach(row => {
+                const src = row.partnerName || 'Unknown';
+                if (!sourceMap[src]) sourceMap[src] = { companies: [], withDeal: 0, dealValue: 0 };
+                sourceMap[src].companies.push(row.company);
+                if (hasDeal(row.deal)) {
+                    sourceMap[src].withDeal++;
+                    const valMatch = row.deal.match(/\$[\d,.]+K/);
+                    if (valMatch) {
+                        const val = parseFloat(valMatch[0].replace('$','').replace('K','').replace(',','')) * 1000;
+                        sourceMap[src].dealValue += val;
+                    }
+                }
+            });
+            let totalCompanies = 0, totalDeals = 0, totalValue = 0;
+            Object.keys(sourceMap).sort((a,b) => sourceMap[b].companies.length - sourceMap[a].companies.length).forEach(src => {
+                const s = sourceMap[src];
+                const pct = s.companies.length > 0 ? Math.round((s.withDeal / s.companies.length) * 100) : 0;
+                const valStr = s.dealValue > 0 ? '$' + (s.dealValue/1000).toFixed(0) + 'K (£' + Math.round(s.dealValue * 0.756 / 1000) + 'K)' : '—';
+                const bgColor = s.withDeal > 0 ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)';
+                const tr = document.createElement('tr');
+                tr.style.background = bgColor;
+                tr.innerHTML = `<td><strong>${src}</strong></td><td>${s.companies.length}</td><td>${s.withDeal}</td><td>${pct}%</td><td>${valStr}</td>`;
+                tbody.appendChild(tr);
+                totalCompanies += s.companies.length;
+                totalDeals += s.withDeal;
+                totalValue += s.dealValue;
+            });
+            const totalPct = totalCompanies > 0 ? Math.round((totalDeals / totalCompanies) * 100) : 0;
+            const totalValStr = totalValue > 0 ? '$' + (totalValue/1000).toFixed(0) + 'K (£' + Math.round(totalValue * 0.756 / 1000) + 'K)' : '—';
+            const totalTr = document.createElement('tr');
+            totalTr.style.background = 'var(--fynd-surface-alt)';
+            totalTr.style.fontWeight = '700';
+            totalTr.innerHTML = `<td><strong>Total</strong></td><td>${totalCompanies}</td><td>${totalDeals}</td><td>${totalPct}%</td><td>${totalValStr}</td>`;
+            tbody.appendChild(totalTr);
+        }
+
+        function setupEventsCardFiltering() {
+            document.querySelectorAll('#events-cards .card.summary').forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('#events-cards .card.summary').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    renderEventsTable(eventsData, card.dataset.filter);
+                });
+            });
+        }
+
+        // === STRATEGIC MOVES RENDER ===
+        function renderStrategicTable(data, filter = 'all') {
+            const tbody = document.getElementById('strategic-tbody');
+            tbody.innerHTML = '';
+            let filtered = data;
+            if (filter !== 'all') filtered = data.filter(r => r.partnerType === filter);
+
+            filtered.forEach(row => {
+                const tr = document.createElement('tr');
+                const typeClass = row.partnerType === 'Technology Partner' ? 'badge-tech' : 'badge-agency';
+                tr.innerHTML = `
+                    <td><strong>${row.companyName}</strong></td>
+                    <td><span class="badge ${typeClass}">${row.partnerType}</span></td>`;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('total-targets').textContent = data.length;
+            document.getElementById('tech-partner-count').textContent = data.filter(r => r.partnerType === 'Technology Partner').length;
+            document.getElementById('impl-partner-count').textContent = data.filter(r => r.partnerType === 'Implementation Partner').length;
+        }
+
+        function setupStrategicCardFiltering() {
+            document.querySelectorAll('#strategic-cards .card.summary').forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('#strategic-cards .card.summary').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    renderStrategicTable(strategicData, card.dataset.filter);
+                });
+            });
+        }
+
+        renderSalesTable(salesData);
+        renderPartnerTable(partnerData);
+        renderActivityTable(activityData);
+        renderEventsTable(eventsData);
+        renderStrategicTable(strategicData);
+        renderSourceBreakup();
+        setupCardFiltering('sales-pipeline', 'sales-table', salesData);
+        setupCardFiltering('partner-pipeline', 'partner-table', partnerData);
+        setupEventsCardFiltering();
+        setupStrategicCardFiltering();
+        initActivityChart();
+
+        // === LOGIN ===
+        const PASS_HASH = 'a3f5b7c2d1'; // obfuscated check
+        function checkLogin() {
+            const pw = document.getElementById('login-password').value;
+            if (pw === 'Vipul@123!') {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-header').classList.remove('dashboard-hidden');
+                document.getElementById('dashboard-main').classList.remove('dashboard-hidden');
+                sessionStorage.setItem('fynd_auth', '1');
+            } else {
+                const errEl = document.getElementById('login-error');
+                errEl.style.display = 'block';
+                document.getElementById('login-password').style.borderColor = '#EF4444';
+                document.getElementById('login-password').focus();
+                setTimeout(() => { errEl.style.display = 'none'; document.getElementById('login-password').style.borderColor = ''; }, 3000);
+            }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', checkLogin);
+        document.getElementById('login-btn').addEventListener('click', checkLogin);
+
+        document.getElementById('toggle-pw').addEventListener('click', function() {
+            const inp = document.getElementById('login-password');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+        });
+
+        // Auto-login if already authenticated in session
+        if (sessionStorage.getItem('fynd_auth') === '1') {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-header').classList.remove('dashboard-hidden');
+            document.getElementById('dashboard-main').classList.remove('dashboard-hidden');
+        }
+
+    </script>
+</body>
+</html>
