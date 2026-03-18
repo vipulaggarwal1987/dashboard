@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fynd UK Growth Overview</title>
+    <title>Fynd UK Growth Overview Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* === LOGIN SCREEN === */
-        .login-screen {
+        /* === ACCESS GATE === */
+        .gate-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: #000000;
@@ -19,7 +19,7 @@
             padding: 24px;
         }
 
-        .login-card {
+        .gate-card {
             background: #FFFFFF;
             border-radius: 16px;
             padding: 48px 40px;
@@ -29,16 +29,16 @@
             text-align: center;
         }
 
-        .login-logo {
+        .gate-logo {
             margin-bottom: 8px;
         }
 
-        .login-logo img {
+        .gate-logo img {
             height: 36px;
             width: auto;
         }
 
-        .login-subtitle {
+        .gate-subtitle {
             font-size: 13px;
             font-weight: 600;
             color: #9B9BA5;
@@ -47,13 +47,13 @@
             margin-bottom: 32px;
         }
 
-        .login-field {
+        .gate-field {
             position: relative;
             margin-bottom: 20px;
             text-align: left;
         }
 
-        .login-field label {
+        .gate-field label {
             display: block;
             font-size: 12px;
             font-weight: 600;
@@ -63,7 +63,7 @@
             margin-bottom: 6px;
         }
 
-        .login-field input {
+        .gate-field input {
             width: 100%;
             padding: 12px 44px 12px 14px;
             border: 1px solid #E8E8EA;
@@ -76,37 +76,14 @@
             outline: none;
         }
 
-        .login-field input:focus {
+        .gate-field input:focus {
             border-color: #8B5CF6;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
             background: #FFFFFF;
         }
 
-        .masked-input {
-            -webkit-text-security: disc;
-            text-security: disc;
-        }
-        .masked-input.unmasked {
-            -webkit-text-security: none;
-            text-security: none;
-        }
 
-        .toggle-pw {
-            position: absolute;
-            right: 10px;
-            bottom: 8px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #9B9BA5;
-            font-size: 18px;
-            padding: 4px;
-            line-height: 1;
-        }
-
-        .toggle-pw:hover { color: #6B6B76; }
-
-        .login-btn {
+        .gate-btn {
             width: 100%;
             padding: 12px;
             background: #000000;
@@ -121,10 +98,10 @@
             margin-top: 4px;
         }
 
-        .login-btn:hover { background: #222222; }
-        .login-btn:active { transform: scale(0.98); }
+        .gate-btn:hover { background: #222222; }
+        .gate-btn:active { transform: scale(0.98); }
 
-        .login-error {
+        .gate-error {
             color: #EF4444;
             font-size: 12px;
             font-weight: 500;
@@ -132,7 +109,7 @@
             display: none;
         }
 
-        .login-footer {
+        .gate-footer {
             margin-top: 28px;
             font-size: 11px;
             color: #9B9BA5;
@@ -141,7 +118,7 @@
         .dashboard-hidden { display: none !important; }
 
         @media (max-width: 480px) {
-            .login-card { padding: 36px 24px; }
+            .gate-card { padding: 36px 24px; }
         }
 
         :root {
@@ -617,23 +594,21 @@
     </style>
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
-    <div class="login-screen" id="login-screen">
-        <div class="login-card">
-            <div class="login-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxvh6JK9sr3X1lET9c18cI4KoomGiTm8gSnA&s" alt="Fynd" onerror="this.outerHTML='<span style=&quot;font-size:28px;font-weight:800;color:#1F1F20;letter-spacing:-1px&quot;>FYND</span>'" style="max-height:48px;width:auto;">
-            </div>
-            <div class="login-subtitle">UK Growth Overview</div>
-            <div id="login-form">
-                <div class="login-field">
-                    <label>Access Code</label>
-                    <input type="text" id="login-password" placeholder="Enter access code" autocomplete="off" autofocus class="masked-input">
-                    <button type="button" class="toggle-pw" id="toggle-pw" tabindex="-1">&#128065;</button>
+    <!-- ACCESS GATE -->
+    <div class="gate-overlay" id="gate-overlay">
+        <div class="gate-card">
+            <div class="gate-logo"><span style="font-size:28px;font-weight:800;color:#1F1F20;letter-spacing:-1px">FYND</span></div>
+            <div class="gate-subtitle">UK Growth Overview</div>
+            <div id="gate-panel">
+                <div class="gate-field">
+                    <label>Dashboard Access Code</label>
+                    <input type="text" id="gate-code" placeholder="Enter dashboard access code" autocomplete="off" aria-label="Dashboard access code">
                 </div>
-                <button type="button" class="login-btn" id="login-btn">Sign In</button>
-                <div class="login-error" id="login-error">Incorrect access code. Please try again.</div>
+                <div style="font-size:12px;color:#6B6B76;text-align:left;margin:-8px 0 14px;">This page only unlocks a local dashboard view. It does not ask for email, password, payment, or download permissions.</div>
+                <button type="button" class="gate-btn" id="gate-btn">Continue</button>
+                <div class="gate-error" id="gate-error">Incorrect access code. Please try again.</div>
             </div>
-            <div class="login-footer">Fynd &middot; Confidential</div>
+            <div class="gate-footer">Fynd &middot; Confidential</div>
         </div>
     </div>
 
@@ -641,7 +616,7 @@
         <div class="header-content">
             <div class="header-left">
                 <div class="logo">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSKUdyA-WBLrNswkwb6CU9OrzFgf5Gp1HPA&s" alt="Fynd" onerror="this.outerHTML='<span style=&quot;font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px&quot;>FYND</span>'">
+                    <span style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px">FYND</span>
                     <div class="logo-divider"></div>
                     <span class="logo-subtitle">UK Growth Overview</span>
                 </div>
@@ -1664,40 +1639,36 @@
         setupTargetAccountsCardFiltering();
         initActivityChart();
 
-        // === LOGIN ===
-        const PASS_HASH = '2d3db157da13c7b422c28d69cf4ea8c7c8505c93254b4b85551e6ab15950f607';
-        async function hashPassword(pw) {
+        // === ACCESS GATE ===
+        const ACCESS_CODE_HASH = '2d3db157da13c7b422c28d69cf4ea8c7c8505c93254b4b85551e6ab15950f607';
+        async function digestKey(pw) {
             const enc = new TextEncoder().encode(pw);
             const buf = await crypto.subtle.digest('SHA-256', enc);
             return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
-        async function checkLogin() {
-            const pw = document.getElementById('login-password').value;
-            const h = await hashPassword(pw);
-            if (h === PASS_HASH) {
-                document.getElementById('login-screen').style.display = 'none';
+        async function verifyAccess() {
+            const pw = document.getElementById('gate-code').value;
+            const h = await digestKey(pw);
+            if (h === ACCESS_CODE_HASH) {
+                document.getElementById('gate-overlay').style.display = 'none';
                 document.getElementById('dashboard-header').classList.remove('dashboard-hidden');
                 document.getElementById('dashboard-main').classList.remove('dashboard-hidden');
-                sessionStorage.setItem('fynd_auth', '1');
+                sessionStorage.setItem('fynd_dashboard_access', '1');
             } else {
-                const errEl = document.getElementById('login-error');
+                const errEl = document.getElementById('gate-error');
                 errEl.style.display = 'block';
-                document.getElementById('login-password').style.borderColor = '#EF4444';
-                document.getElementById('login-password').focus();
-                setTimeout(() => { errEl.style.display = 'none'; document.getElementById('login-password').style.borderColor = ''; }, 3000);
+                document.getElementById('gate-code').style.borderColor = '#EF4444';
+                document.getElementById('gate-code').focus();
+                setTimeout(() => { errEl.style.display = 'none'; document.getElementById('gate-code').style.borderColor = ''; }, 3000);
             }
         }
 
-        document.getElementById('login-password').addEventListener('keydown', function(e) { if (e.key === 'Enter') checkLogin(); });
-        document.getElementById('login-btn').addEventListener('click', function() { checkLogin(); });
+        document.getElementById('gate-code').addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyAccess(); });
+        document.getElementById('gate-btn').addEventListener('click', function() { verifyAccess(); });
 
-        document.getElementById('toggle-pw').addEventListener('click', function() {
-            document.getElementById('login-password').classList.toggle('unmasked');
-        });
-
-        // Auto-login if already authenticated in session
-        if (sessionStorage.getItem('fynd_auth') === '1') {
-            document.getElementById('login-screen').style.display = 'none';
+        // Auto-unlock if already verified in session
+        if (sessionStorage.getItem('fynd_dashboard_access') === '1') {
+            document.getElementById('gate-overlay').style.display = 'none';
             document.getElementById('dashboard-header').classList.remove('dashboard-hidden');
             document.getElementById('dashboard-main').classList.remove('dashboard-hidden');
         }
