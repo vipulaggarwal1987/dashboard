@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fynd UK Growth Overview Dashboard</title>
+    <title>Fynd UK Growth Overview</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* === ACCESS GATE === */
-        .gate-overlay {
+        /* === LOGIN SCREEN === */
+        .login-screen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: #000000;
@@ -19,7 +19,7 @@
             padding: 24px;
         }
 
-        .gate-card {
+        .login-card {
             background: #FFFFFF;
             border-radius: 16px;
             padding: 48px 40px;
@@ -29,16 +29,16 @@
             text-align: center;
         }
 
-        .gate-logo {
+        .login-logo {
             margin-bottom: 8px;
         }
 
-        .gate-logo img {
+        .login-logo img {
             height: 36px;
             width: auto;
         }
 
-        .gate-subtitle {
+        .login-subtitle {
             font-size: 13px;
             font-weight: 600;
             color: #9B9BA5;
@@ -47,13 +47,13 @@
             margin-bottom: 32px;
         }
 
-        .gate-field {
+        .login-field {
             position: relative;
             margin-bottom: 20px;
             text-align: left;
         }
 
-        .gate-field label {
+        .login-field label {
             display: block;
             font-size: 12px;
             font-weight: 600;
@@ -63,7 +63,7 @@
             margin-bottom: 6px;
         }
 
-        .gate-field input {
+        .login-field input {
             width: 100%;
             padding: 12px 44px 12px 14px;
             border: 1px solid #E8E8EA;
@@ -76,14 +76,28 @@
             outline: none;
         }
 
-        .gate-field input:focus {
+        .login-field input:focus {
             border-color: #8B5CF6;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
             background: #FFFFFF;
         }
 
+        .toggle-pw {
+            position: absolute;
+            right: 10px;
+            bottom: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9B9BA5;
+            font-size: 18px;
+            padding: 4px;
+            line-height: 1;
+        }
 
-        .gate-btn {
+        .toggle-pw:hover { color: #6B6B76; }
+
+        .login-btn {
             width: 100%;
             padding: 12px;
             background: #000000;
@@ -98,10 +112,10 @@
             margin-top: 4px;
         }
 
-        .gate-btn:hover { background: #222222; }
-        .gate-btn:active { transform: scale(0.98); }
+        .login-btn:hover { background: #222222; }
+        .login-btn:active { transform: scale(0.98); }
 
-        .gate-error {
+        .login-error {
             color: #EF4444;
             font-size: 12px;
             font-weight: 500;
@@ -109,7 +123,7 @@
             display: none;
         }
 
-        .gate-footer {
+        .login-footer {
             margin-top: 28px;
             font-size: 11px;
             color: #9B9BA5;
@@ -118,7 +132,7 @@
         .dashboard-hidden { display: none !important; }
 
         @media (max-width: 480px) {
-            .gate-card { padding: 36px 24px; }
+            .login-card { padding: 36px 24px; }
         }
 
         :root {
@@ -594,21 +608,23 @@
     </style>
 </head>
 <body>
-    <!-- ACCESS GATE -->
-    <div class="gate-overlay" id="gate-overlay">
-        <div class="gate-card">
-            <div class="gate-logo"><span style="font-size:28px;font-weight:800;color:#1F1F20;letter-spacing:-1px">FYND</span></div>
-            <div class="gate-subtitle">UK Growth Overview</div>
-            <div id="gate-panel">
-                <div class="gate-field">
-                    <label>Dashboard Access Code</label>
-                    <input type="text" id="gate-code" placeholder="Enter dashboard access code" autocomplete="off" aria-label="Dashboard access code">
-                </div>
-                <div style="font-size:12px;color:#6B6B76;text-align:left;margin:-8px 0 14px;">This page only unlocks a local dashboard view. It does not ask for email, password, payment, or download permissions.</div>
-                <button type="button" class="gate-btn" id="gate-btn">Continue</button>
-                <div class="gate-error" id="gate-error">Incorrect access code. Please try again.</div>
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxvh6JK9sr3X1lET9c18cI4KoomGiTm8gSnA&s" alt="Fynd" onerror="this.outerHTML='<span style=&quot;font-size:28px;font-weight:800;color:#1F1F20;letter-spacing:-1px&quot;>FYND</span>'" style="max-height:48px;width:auto;">
             </div>
-            <div class="gate-footer">Fynd &middot; Confidential</div>
+            <div class="login-subtitle">UK Growth Overview</div>
+            <form id="login-form" onsubmit="return false;">
+                <div class="login-field">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password" autocomplete="off" autofocus>
+                    <button type="button" class="toggle-pw" id="toggle-pw" tabindex="-1">&#128065;</button>
+                </div>
+                <button type="submit" class="login-btn" id="login-btn">Sign In</button>
+                <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+            </form>
+            <div class="login-footer">Fynd &middot; Confidential</div>
         </div>
     </div>
 
@@ -616,7 +632,7 @@
         <div class="header-content">
             <div class="header-left">
                 <div class="logo">
-                    <span style="font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px">FYND</span>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvSKUdyA-WBLrNswkwb6CU9OrzFgf5Gp1HPA&s" alt="Fynd" onerror="this.outerHTML='<span style=&quot;font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px&quot;>FYND</span>'">
                     <div class="logo-divider"></div>
                     <span class="logo-subtitle">UK Growth Overview</span>
                 </div>
@@ -627,6 +643,7 @@
                     <button class="nav-tab" data-tab="events">Events</button>
                     <button class="nav-tab" data-tab="strategic-moves">Target Partners</button>
                     <button class="nav-tab" data-tab="target-accounts">Target Accounts</button>
+                    <button class="nav-tab" data-tab="meetings">Meetings</button>
                 </nav>
             </div>
             <div class="header-right">
@@ -895,6 +912,47 @@
                         </tr>
                     </thead>
                     <tbody id="target-accounts-tbody"></tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7: MEETINGS -->
+        <div class="tab-content" id="meetings">
+            <div class="summary-cards" id="meetings-cards">
+                <div class="card summary active" data-filter="all">
+                    <div class="card-label">All Meetings</div>
+                    <div class="card-value" id="mtg-total">0</div>
+                </div>
+                <div class="card summary" data-filter="external">
+                    <div class="card-label">External</div>
+                    <div class="card-value" id="mtg-external">0</div>
+                </div>
+                <div class="card summary" data-filter="internal">
+                    <div class="card-label">Internal</div>
+                    <div class="card-value" id="mtg-internal">0</div>
+                </div>
+                <div class="card summary" data-filter="today">
+                    <div class="card-label">Today</div>
+                    <div class="card-value" id="mtg-today">0</div>
+                </div>
+            </div>
+            <p class="chart-footnote">Next 15 days from Google Calendar (23 Mar – 7 Apr 2026). External = meetings with non-Fynd attendees. Internal = Fynd-only attendees.</p>
+            <div class="table-container">
+                <div class="table-scroll">
+                <table id="meetings-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-column="date">Date</th>
+                            <th class="sortable" data-column="time">Time (UK)</th>
+                            <th class="sortable" data-column="summary">Meeting</th>
+                            <th class="sortable" data-column="meetingType">Type</th>
+                            <th>Who</th>
+                            <th>Your RSVP</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="meetings-tbody"></tbody>
                 </table>
                 </div>
             </div>
@@ -1394,6 +1452,80 @@
             else if (tableId === 'activity-table') renderActivityTable(data);
         }
 
+        // === MEETINGS DATA ===
+        const meetingsData = [
+            { date: '2026-03-23', time: '14:00', endTime: '14:30', summary: 'Fynd / Validify', meetingType: 'External', attendees: [{name:'Jaydon',email:'jaydon@validifycommunity.com',ext:true},{name:'Fergal',email:'fergal@validifycommunity.com',ext:true},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Harsh Kumar',email:'harshkumar@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MzVhYzJtNXM0dTdpMDdyM2E4NnBtZTY4aGMgdmlwdWxhZ2dhcndhbEBnb2Z5bmQuY29t&ctz=Europe/London', pipelineCompany: 'Validify Limited' },
+            { date: '2026-03-24', time: '10:00', endTime: '11:00', summary: 'NBrown / Fynd: Scoping', meetingType: 'External', attendees: [{name:'Lalit Suryawanshi',email:'lalit.suryawanshi@nbrown.co.uk',ext:true},{name:'Jigar Dafda',email:'jigardafda@gofynd.com',ext:false},{name:'Farhan Khan',email:'farhankhan@gofynd.com',ext:false},{name:'Nayan Lathiya',email:'nayanlathiya@gofynd.com',ext:false},{name:'Ronak Modi',email:'ronakmodi@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MnFzbWdmdjFubWFsbGptcDdmcGkwODVmYzQgdmlwdWxhZ2dhcndhbEBnb2Z5bmQuY29t&ctz=Europe/London', pipelineCompany: 'N Brown Group' },
+            { date: '2026-03-24', time: '10:30', endTime: '11:00', summary: 'GO MO X Boltic.io: Discussion', meetingType: 'External', attendees: [{name:'Aditya M',email:'aditya.m@gomogroup.com',ext:true},{name:'Zainab N',email:'zainab.n@gomogroup.com',ext:true},{name:'Indrajeet M',email:'indrajeet.m@gomogroup.com',ext:true},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Ritesh J',email:'riteshj@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=NnRqamkya3BmbWg1bTc4b3YyMHJrMTg4MTYgdmlwdWxhZ2dhcndhbEBnb2Z5bmQuY29t&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-03-25', time: '09:30', endTime: '10:00', summary: 'Fynd x Incrementum', meetingType: 'External', attendees: [{name:'Zon',email:'zon@incrementumx.com',ext:true},{name:'Sandeep',email:'sandeep@incrementumx.com',ext:true},{name:'Neel Patel',email:'neel.patel24@gmail.com',ext:true},{name:'SMG',email:'smg@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MzBqOTF2Y2hrM28zNzM0dDJ1bnNxNDFrYjZfMjAyNjAzMjVUMDkzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-03-25', time: '11:30', endTime: '12:15', summary: 'Fynd x The Retail Hive', meetingType: 'External', attendees: [{name:'Tom Jones',email:'tom.jones@thehive-network.com',ext:true},{name:'Emily',email:'emily@thehive-network.com',ext:true},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Aditi Thakore',email:'aditithakore@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MDlwdTR0cDVsbDNmczRibGc1aTZsM25nNWggdmlwdWxhZ2dhcndhbEBnb2Z5bmQuY29t&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-03-25', time: '15:00', endTime: '16:00', summary: 'The Entertainer & Fynd Intro — PIM, CDN, DAM, Agentic', meetingType: 'External', attendees: [{name:'Andy Rayner',email:'andy.rayner@theentertainer.com',ext:true},{name:'Matt P',email:'mattp@madrisconsult.com',ext:true},{name:'Nayan Lathiya',email:'nayanlathiya@gofynd.com',ext:false},{name:'Ronak Modi',email:'ronakmodi@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MGFjbGZwOTZrZ2hpcTQ4aXM0YTRrMDJqaWkgdmlwdWxhZ2dhcndhbEBnb2Z5bmQuY29t&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-03-26', time: '09:30', endTime: '10:00', summary: 'Weekly Sync: GOMO x Boltic.io', meetingType: 'External', attendees: [{name:'Aditya M',email:'aditya.m@gomogroup.com',ext:true},{name:'Zainab N',email:'zainab.n@gomogroup.com',ext:true},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Tanmay Mokal',email:'tanmaymokal@gofynd.com',ext:false},{name:'Ritesh J',email:'riteshj@gofynd.com',ext:false}], rsvp: 'Pending', link: 'https://www.google.com/calendar/event?eid=MmhscnMwbGxqMmNqYjVrNW52cjMwNDFkdTdfMjAyNjAzMjZUMDkzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-03-27', time: '04:30', endTime: '05:30', summary: 'UK Huddle', meetingType: 'Internal', attendees: [{name:'SMG',email:'smg@gofynd.com',ext:false},{name:'Ronak Modi',email:'ronakmodi@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=NGpsbm1lMG85b2tuM3I2cDU4b2ZuZXZ0NW1fMjAyNjAzMjdUMDQzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-03-27', time: '06:00', endTime: '07:00', summary: 'Inbound/Outbound Pipeline Review', meetingType: 'Internal', attendees: [{name:'Ronak Modi',email:'ronakmodi@gofynd.com',ext:false},{name:'Dharmendra',email:'dharmendra@gofynd.com',ext:false},{name:'Neel Jain',email:'neeljain@gofynd.com',ext:false},{name:'Abhishek D',email:'abhishekd@gofynd.com',ext:false},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Rushabh Mehta',email:'rushabhmehta1@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=N2ludXY0ZGZzcXZscDkza2U4bDJuNnJmbWxfMjAyNjAzMjdUMDYwMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-04-01', time: '10:30', endTime: '11:00', summary: 'Fynd x Incrementum', meetingType: 'External', attendees: [{name:'Zon',email:'zon@incrementumx.com',ext:true},{name:'Sandeep',email:'sandeep@incrementumx.com',ext:true},{name:'Neel Patel',email:'neel.patel24@gmail.com',ext:true},{name:'SMG',email:'smg@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MzBqOTF2Y2hrM28zNzM0dDJ1bnNxNDFrYjZfMjAyNjA0MDFUMDkzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-04-02', time: '10:30', endTime: '11:00', summary: 'Weekly Sync: GOMO x Boltic.io', meetingType: 'External', attendees: [{name:'Aditya M',email:'aditya.m@gomogroup.com',ext:true},{name:'Zainab N',email:'zainab.n@gomogroup.com',ext:true},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Tanmay Mokal',email:'tanmaymokal@gofynd.com',ext:false},{name:'Ritesh J',email:'riteshj@gofynd.com',ext:false}], rsvp: 'Pending', link: 'https://www.google.com/calendar/event?eid=MmhscnMwbGxqMmNqYjVrNW52cjMwNDFkdTdfMjAyNjA0MDJUMDkzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-04-03', time: '05:30', endTime: '06:30', summary: 'UK Huddle', meetingType: 'Internal', attendees: [{name:'SMG',email:'smg@gofynd.com',ext:false},{name:'Ronak Modi',email:'ronakmodi@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=NGpsbm1lMG85b2tuM3I2cDU4b2ZuZXZ0NW1fMjAyNjA0MDNUMDQzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-04-03', time: '07:00', endTime: '08:00', summary: 'Inbound/Outbound Pipeline Review', meetingType: 'Internal', attendees: [{name:'Ronak Modi',email:'ronakmodi@gofynd.com',ext:false},{name:'Dharmendra',email:'dharmendra@gofynd.com',ext:false},{name:'Neel Jain',email:'neeljain@gofynd.com',ext:false},{name:'Abhishek D',email:'abhishekd@gofynd.com',ext:false},{name:'Shubham Soni',email:'shubhamsoni@gofynd.com',ext:false},{name:'Rushabh Mehta',email:'rushabhmehta1@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=N2ludXY0ZGZzcXZscDkza2U4bDJuNnJmbWxfMjAyNjA0MDNUMDYwMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+            { date: '2026-04-03', time: '09:30', endTime: '10:00', summary: 'Fynd & Bridgehead Bi-Weekly Call', meetingType: 'External', attendees: [{name:'Paul',email:'paul@bridgeheadagency.com',ext:true},{name:'Giada',email:'giada@bridgeheadagency.com',ext:true},{name:'Jai',email:'jai@bridgeheadagency.com',ext:true},{name:'Aditi Thakore',email:'aditithakore@gofynd.com',ext:false},{name:'SMG',email:'smg@gofynd.com',ext:false}], rsvp: 'Accepted', link: 'https://www.google.com/calendar/event?eid=MmlubGx1ajZ1OWRhcnFwdmFvNzdubDRsa21fMjAyNjA0MDNUMDgzMDAwWiB2aXB1bGFnZ2Fyd2FsQGdvZnluZC5jb20&ctz=Europe/London', pipelineCompany: null },
+        ];
+
+        // === MEETINGS RENDER ===
+        function renderMeetingsTable(data, filter = 'all') {
+            const tbody = document.getElementById('meetings-tbody');
+            tbody.innerHTML = '';
+            const today = new Date().toISOString().split('T')[0];
+            let filtered = data;
+            if (filter === 'external') filtered = data.filter(r => r.meetingType === 'External');
+            else if (filter === 'internal') filtered = data.filter(r => r.meetingType === 'Internal');
+            else if (filter === 'today') filtered = data.filter(r => r.date === today);
+
+            filtered.forEach(row => {
+                const tr = document.createElement('tr');
+                const isToday = row.date === today;
+                const isPast = row.date < today;
+                const dateObj = new Date(row.date + 'T00:00:00');
+                const dayName = dateObj.toLocaleDateString('en-GB', { weekday: 'short' });
+                const dateStr = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                const extAttendees = row.attendees.filter(a => a.ext);
+                const intAttendees = row.attendees.filter(a => !a.ext);
+                const extNames = extAttendees.map(a => `<span style="color:var(--fynd-purple);font-weight:600;">${a.name}</span> <span style="font-size:11px;color:var(--fynd-text-muted);">(${a.email.split('@')[1]})</span>`).join('<br>');
+                const intNames = intAttendees.map(a => a.name).join(', ');
+                const whoHtml = extNames + (extNames && intNames ? '<br><span style="font-size:11px;color:var(--fynd-text-muted);margin-top:4px;display:inline-block;">+ Fynd: ' + intNames + '</span>' : (intNames ? '<span style="color:var(--fynd-text-secondary);">' + intNames + '</span>' : ''));
+                const typeBadge = row.meetingType === 'External' ? 'badge-deal-yes' : 'badge-deal-no';
+                const rsvpColor = row.rsvp === 'Accepted' ? 'color:var(--fynd-green);' : row.rsvp === 'Declined' ? 'color:var(--fynd-red);' : 'color:var(--fynd-amber);';
+                const rowBg = isToday ? 'background:rgba(139,92,246,0.06);' : isPast ? 'opacity:0.5;' : '';
+                const pipelineBadge = row.pipelineCompany ? `<span style="display:block;font-size:10px;margin-top:3px;padding:2px 6px;background:#EDE9FE;color:#5B21B6;border-radius:3px;display:inline-block;">Pipeline</span>` : '';
+                tr.style.cssText = rowBg;
+                tr.innerHTML = `
+                    <td><strong>${dayName}, ${dateStr}</strong>${isToday ? '<span style="display:block;font-size:10px;color:var(--fynd-purple);font-weight:700;">TODAY</span>' : ''}</td>
+                    <td>${row.time} – ${row.endTime}</td>
+                    <td><strong>${row.summary}</strong>${pipelineBadge}</td>
+                    <td><span class="badge ${typeBadge}">${row.meetingType}</span></td>
+                    <td style="font-size:12px;line-height:1.6;">${whoHtml}</td>
+                    <td style="${rsvpColor}font-weight:600;font-size:12px;">${row.rsvp}</td>
+                    <td><a href="${row.link}" target="_blank" class="source-link" title="Open in Google Calendar"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></td>`;
+                tbody.appendChild(tr);
+            });
+
+            const todayMtgs = data.filter(r => r.date === today);
+            document.getElementById('mtg-total').textContent = data.length;
+            document.getElementById('mtg-external').textContent = data.filter(r => r.meetingType === 'External').length;
+            document.getElementById('mtg-internal').textContent = data.filter(r => r.meetingType === 'Internal').length;
+            document.getElementById('mtg-today').textContent = todayMtgs.length;
+        }
+
+        function setupMeetingsCardFiltering() {
+            document.querySelectorAll('#meetings-cards .card.summary').forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('#meetings-cards .card.summary').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    renderMeetingsTable(meetingsData, card.dataset.filter);
+                });
+            });
+        }
+
         // === TAB SWITCHING ===
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -1426,11 +1558,13 @@
                 else if (tableId === 'events-table') data = eventsData;
                 else if (tableId === 'strategic-table') data = strategicData;
                 else if (tableId === 'target-accounts-table') data = targetAccountsData;
+                else if (tableId === 'meetings-table') data = meetingsData;
                 if (!data) return;
                 sortTable(tableId, th.dataset.column, data);
                 if (tableId === 'events-table') renderEventsTable(data);
                 else if (tableId === 'strategic-table') renderStrategicTable(data);
                 else if (tableId === 'target-accounts-table') renderTargetAccountsTable(data);
+                else if (tableId === 'meetings-table') renderMeetingsTable(data);
             });
         });
 
@@ -1637,38 +1771,45 @@
         setupEventsCardFiltering();
         setupStrategicCardFiltering();
         setupTargetAccountsCardFiltering();
+        renderMeetingsTable(meetingsData);
+        setupMeetingsCardFiltering();
         initActivityChart();
 
-        // === ACCESS GATE ===
-        const ACCESS_CODE_HASH = '2d3db157da13c7b422c28d69cf4ea8c7c8505c93254b4b85551e6ab15950f607';
-        async function digestKey(pw) {
+        // === LOGIN ===
+        const PASS_HASH = '2d3db157da13c7b422c28d69cf4ea8c7c8505c93254b4b85551e6ab15950f607';
+        async function hashPassword(pw) {
             const enc = new TextEncoder().encode(pw);
             const buf = await crypto.subtle.digest('SHA-256', enc);
             return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
-        async function verifyAccess() {
-            const pw = document.getElementById('gate-code').value;
-            const h = await digestKey(pw);
-            if (h === ACCESS_CODE_HASH) {
-                document.getElementById('gate-overlay').style.display = 'none';
+        async function checkLogin() {
+            const pw = document.getElementById('login-password').value;
+            const h = await hashPassword(pw);
+            if (h === PASS_HASH) {
+                document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('dashboard-header').classList.remove('dashboard-hidden');
                 document.getElementById('dashboard-main').classList.remove('dashboard-hidden');
-                sessionStorage.setItem('fynd_dashboard_access', '1');
+                sessionStorage.setItem('fynd_auth', '1');
             } else {
-                const errEl = document.getElementById('gate-error');
+                const errEl = document.getElementById('login-error');
                 errEl.style.display = 'block';
-                document.getElementById('gate-code').style.borderColor = '#EF4444';
-                document.getElementById('gate-code').focus();
-                setTimeout(() => { errEl.style.display = 'none'; document.getElementById('gate-code').style.borderColor = ''; }, 3000);
+                document.getElementById('login-password').style.borderColor = '#EF4444';
+                document.getElementById('login-password').focus();
+                setTimeout(() => { errEl.style.display = 'none'; document.getElementById('login-password').style.borderColor = ''; }, 3000);
             }
         }
 
-        document.getElementById('gate-code').addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyAccess(); });
-        document.getElementById('gate-btn').addEventListener('click', function() { verifyAccess(); });
+        document.getElementById('login-form').addEventListener('submit', function(e) { e.preventDefault(); checkLogin(); });
+        document.getElementById('login-btn').addEventListener('click', function(e) { e.preventDefault(); checkLogin(); });
 
-        // Auto-unlock if already verified in session
-        if (sessionStorage.getItem('fynd_dashboard_access') === '1') {
-            document.getElementById('gate-overlay').style.display = 'none';
+        document.getElementById('toggle-pw').addEventListener('click', function() {
+            const inp = document.getElementById('login-password');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+        });
+
+        // Auto-login if already authenticated in session
+        if (sessionStorage.getItem('fynd_auth') === '1') {
+            document.getElementById('login-screen').style.display = 'none';
             document.getElementById('dashboard-header').classList.remove('dashboard-hidden');
             document.getElementById('dashboard-main').classList.remove('dashboard-hidden');
         }
